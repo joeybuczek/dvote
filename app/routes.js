@@ -30,7 +30,7 @@ module.exports = function(app, passport) {
     }));
     
     // PROFILE PAGE =============================
-    // this is protected, must be loggin in to view
+    // this is protected, must be logged in to view
     app.get('/profile', isLoggedIn, function(req, res){
         // pass in user
         res.render('profile.ejs', { user: req.user });
