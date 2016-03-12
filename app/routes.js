@@ -11,7 +11,11 @@ module.exports = function(app, passport) {
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
     
-    // app.post('/login', passport stuff goes here);
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile',
+        failureRedirect : '/login',
+        failureFlash    : true
+    }));
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
@@ -19,7 +23,11 @@ module.exports = function(app, passport) {
         res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
     
-    // app.post('/signup', passport stuff goes here);
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/profile',
+        failureRedirect : '/signup',
+        failureFlash    : true
+    }));
     
     // PROFILE PAGE =============================
     // this is protected, must be loggin in to view
