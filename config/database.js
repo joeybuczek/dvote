@@ -1,5 +1,6 @@
+// env vars
+if (!process.env.MONGO_URL) { require('./env'); }
+
 module.exports = {
-  
-  'url' : 'mongodb://localhost:27017/dvote'
-    
+  'url' : process.env.MONGO_URL
 };

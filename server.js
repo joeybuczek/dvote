@@ -1,4 +1,7 @@
 // set up ======================================================================
+// env vars
+if (!process.env.SESSION_SECRET) { require('./env'); }
+
 // modules and tools
 var express  = require('express');
 var app      = express();
@@ -27,7 +30,7 @@ app.use(bodyParser());
 app.set('view engine', 'ejs');
 
 // passport requirements - use env.js for secret in this spot:
-app.use(session({ secret: 'dvoteyourself' })); // session secret
+app.use(session({ secret: process.env.SESSION_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persist login sessions
 app.use(flash()); 
