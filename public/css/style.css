@@ -1,0 +1,20 @@
+.title-bar {
+    background-color: #eaeaea;
+    height: 55px;
+}
+.body-container {
+    margin: 30px;
+}
+.header-color-bar {
+    background-color: lightskyblue;
+    padding: 20px;
+    height: 150px;
+    max-height: 150px;
+}
+.main-text-color {
+    color: black;
+}
+.menu-icon::after {
+    background: #111;
+    box-shadow: 0 7px 0 #111, 0 14px 0 #111; 
+}

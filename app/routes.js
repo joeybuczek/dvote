@@ -1,14 +1,22 @@
+// local vars
+var locals = { 
+    layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
+    title: 'dVOTE',
+    subtitle: 'Make your digital voice heard!' 
+};
+
 module.exports = function(app, passport) {
     
     // HOME PAGE ================================
     app.get('/', function(req, res){
-        res.render('index.ejs');
+        res.render('index', locals);
     });
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
-        // pass in any flash messages
-        res.render('login.ejs', { message: req.flash('loginMessage') });
+        // pass in any flash messages by added to the locals object
+        locals.message = req.flash('loginMessage');
+        res.render('login', locals);
     });
     
     app.post('/login', passport.authenticate('local-login', {
@@ -19,8 +27,9 @@ module.exports = function(app, passport) {
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
-        // pass in any flash messages
-        res.render('signup.ejs', { message: req.flash('signupMessage') });
+        // pass in any flash messages by added to the locals object
+        locals.message = req.flash('signupMessage');
+        res.render('signup', locals);
     });
     
     app.post('/signup', passport.authenticate('local-signup', {
@@ -32,8 +41,9 @@ module.exports = function(app, passport) {
     // PROFILE PAGE =============================
     // this is protected, must be logged in to view
     app.get('/profile', isLoggedIn, function(req, res){
-        // pass in user
-        res.render('profile.ejs', { user: req.user });
+        // pass in user into locals object
+        locals.user = req.user;
+        res.render('profile', locals);
     });
     
     // LOGOUT ===================================

@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="header-color-bar">
+        <h1>Login</h1>
+    </div>
+    
+    <!-- show messages -->
+    {% if (message.length > 0) %}
+        <div class="alert callout" data-closable>
+            <p>{{ message }}</p>
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+
+   <div class="body-container">
+
+        <!-- Login Form -->
+        <form action="/login" method="post">    
+        
+            <div class="row">
+                <div class="medium-6 columns">
+                    <label>Email
+                        <input type="text" name="email">
+                    </label>
+                    <label>Password
+                        <input type="password" name="password">
+                    </label>
+                    <button type="submit" class="button">Login</button>
+                </div>
+            </div>
+            
+        </form> 
+        
+        <hr>
+        
+        <p>Need an account? <a href="/signup">Signup</a></p>
+        <p>Or go <a href="/">home</a>.</p>
+    
+    </div>
+
+{% endblock %}

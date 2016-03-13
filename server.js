@@ -14,6 +14,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var swig         = require('swig');
 
 var configDB = require('./config/database.js');
 
@@ -27,9 +28,15 @@ app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser());
 
-app.set('view engine', 'ejs');
+// static files
+app.use(express.static('public'));
 
-// passport requirements - use env.js for secret in this spot:
+// view engine (swig)
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
+// passport requirements - load from env vars where needed
 app.use(session({ secret: process.env.SESSION_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persist login sessions

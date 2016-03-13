@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="header-color-bar">
+        <h1>Profile Page</h1>
+        <a href="/logout" class="button">Logout</a>
+    </div>
+
+    <div class="body-container">
+
+        <!-- LOCAL INFORMATION -->
+        <div class="row">
+            <div class="medium-8 columns">
+                <h3>Local</h3>
+                <p>
+                    <strong>email</strong>: {{ user.local.email }}<br>
+                    <strong>password</strong>: {{ user.local.password }}
+                </p>
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}
