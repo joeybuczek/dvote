@@ -2,18 +2,24 @@
 var locals = { 
     layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
     title: 'dVOTE',
-    subtitle: 'Make your digital voice heard!' 
+    subtitle: 'Make your digital voice count!' 
 };
 
 module.exports = function(app, passport) {
     
     // HOME PAGE ================================
     app.get('/', function(req, res){
+        // check if user present for layout.html purposes
+        if (req.user) locals.user = req.user;
+        
         res.render('index', locals);
     });
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
+        // check if user present for layout.html purposes
+        if (req.user) locals.user = req.user;
+        
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('loginMessage');
         res.render('login', locals);
@@ -27,6 +33,9 @@ module.exports = function(app, passport) {
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
+        // check if user present for layout.html purposes
+        if (req.user) locals.user = req.user;
+        
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('signupMessage');
         res.render('signup', locals);
@@ -49,6 +58,7 @@ module.exports = function(app, passport) {
     // LOGOUT ===================================
     app.get('/logout', function(req, res){
         req.logout();
+        locals.user = false;
         res.redirect('/');
     });
 };
