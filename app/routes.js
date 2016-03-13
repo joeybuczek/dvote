@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
-        // pass in any flash messages by added to the locals object
+        // pass in any flash messages by adding to the locals object
         locals.message = req.flash('loginMessage');
         res.render('login', locals);
     });
@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
-        // pass in any flash messages by added to the locals object
+        // pass in any flash messages by adding to the locals object
         locals.message = req.flash('signupMessage');
         res.render('signup', locals);
     });
@@ -41,7 +41,7 @@ module.exports = function(app, passport) {
     // PROFILE PAGE =============================
     // this is protected, must be logged in to view
     app.get('/profile', isLoggedIn, function(req, res){
-        // pass in user into locals object
+        // pass in user by adding into locals object
         locals.user = req.user;
         res.render('profile', locals);
     });

@@ -47,7 +47,10 @@ require('./app/routes.js')(app, passport); // load routes and pass in app/passpo
 
 // 404 catch
 app.use(function(req, res){
-    res.send('404 - Sorry, unable to locate what you were looking for.');
+    res.render('404', { 
+        layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
+        title: 'dVOTE'
+    });
 });
 
 // listen ======================================================================
