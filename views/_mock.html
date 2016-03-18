@@ -1,0 +1,6 @@
+<p>All the publicly accessible polls should show up in this section.</p>
+
+{% for poll in polls %}
+    <h3>Poll name: {{ poll.poll }}</h3>
+{% endfor %}
+    

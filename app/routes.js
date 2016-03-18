@@ -1,3 +1,6 @@
+// dependencies
+var mongoFn = require('./mongoFn');
+
 // local vars
 var locals = { 
     layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
@@ -5,12 +8,18 @@ var locals = {
     subtitle: 'Make your digital voice count!' 
 };
 
+// test array
+var testArr = [{ poll: "poll 1" }];
+
 module.exports = function(app, passport) {
     
     // HOME PAGE ================================
     app.get('/', function(req, res){
         // check if user present for layout.html purposes
         if (req.user) locals.user = req.user;
+        
+        // testing array
+        locals.polls = testArr;
         
         res.render('index', locals);
     });
