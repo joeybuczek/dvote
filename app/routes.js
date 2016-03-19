@@ -19,7 +19,6 @@ module.exports = function(app, passport) {
         if (req.user) locals.user = req.user;
         
         // testing array
-        locals.polls = testArr;
         
         res.render('index', locals);
     });

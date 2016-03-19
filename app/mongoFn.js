@@ -5,6 +5,7 @@ var configDB = require('../config/database');
 // mongoFn object
 var mongoFn = {};
 
+
 // test connection - accepts a callback, returns an object ie: { 'response' : value }
 mongoFn.testConnection = function(callback){
     // connect to mongodb
@@ -28,6 +29,7 @@ mongoFn.testConnection = function(callback){
     }); // end connect
 }; // end testConnection
 
+
 // mongoFn query() - accepts a query object and a callback, returns an object
 mongoFn.query = function(queryObj, callback){
     
@@ -40,27 +42,56 @@ mongoFn.query = function(queryObj, callback){
     // connect and query
     mongo.connect(configDB.url, function (err, db) {
         
-        if (err) callback({ 'response' : 'Error: Unable to connect to db' });
-        
-        var data = db.collection('data');
-        data.find(queryObj).toArray(function(err, docs){
-            
-            // create return object
-            var returnObj;
-            if (err) {
-                returnObj = { 'response' : 'Error: Unable to retrieve docs' };
-            } else {
-                returnObj = { 'response' : docs };
-            }
-            
-            // close db and run callback
-            db.close();
-            callback(returnObj);
-            
-        }); // end find().toArray()        
+        if (err) {
+            callback({ 'response' : 'Error: Unable to connect to db' });
+        } else {
+            var data = db.collection('data');
+            data.find(queryObj).toArray(function(err, docs){
+                
+                // create return object
+                var returnObj;
+                if (err) {
+                    returnObj = { 'response' : 'Error: Unable to retrieve docs' };
+                } else {
+                    returnObj = { 'response' : docs };
+                }
+                
+                // close db and run callback
+                db.close();
+                callback(returnObj);
+                
+            }); // end find().toArray()  
+        } // end else      
     }); // end connect
 }; // end query()
 
+
+// mongoFn insert - accepts an object and a callback - returns an object
+mongoFn.insert = function(insertObj, callback){
+    mongo.connect(configDB.url, function (err, db) {
+        if (err) {
+            callback({ 'response' : 'Unable to connect to db' });
+        } else {
+            // insert document
+            var data = db.collection('data');
+            data.insertOne(insertObj, function(err, result){
+                
+                // create return object
+                var returnObj;
+                if (err) {
+                    returnObj = { 'response' : 'Error: Unable to insert document' };
+                } else {
+                    returnObj = { 'response' : result.result };
+                }
+                
+                // close db and run callback
+                db.close();
+                callback(returnObj);
+                
+            }); // end insertOne           
+        } // end else   
+    }); // end connect
+}; // end insert()
 
 
 // exports
