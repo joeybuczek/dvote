@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="header-color-bar">
+        <h2>{{ poll.name }}</h2>
+        <h3>{{ poll.description }}</h3>
+    </div>
+    
+    <div class="body-container">
+       
+        <div class="row">
+            <div class="small-6 large-6 columns">
+
+                <div class="choice-list">
+                    {% for choice in poll.choices %}
+                        <p>{{ choice.label }} : {{ choice.value }}</p>
+                    {% endfor %}
+                </div>
+            
+            </div>
+            <div class="small-6 large-6 columns">
+                <p class="centered">Chart.js output goes here</p>
+            </div>
+        </div>
+    
+    </div>
+    
+{% endblock %}

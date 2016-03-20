@@ -1,30 +1,71 @@
 // dependencies
 var mongoFn = require('./mongoFn');
 
-// local vars
-var locals = { 
-    layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
-    title: 'dVOTE',
-    subtitle: 'Make your digital voice count!' 
+// local vars factory
+function getLocals(){
+    return { 
+        layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
+        title: 'dVOTE',
+        subtitle: 'Make your digital voice count!' 
+    };
 };
 
-// test array
-var testArr = [{ poll: "poll 1" }];
 
+// test object
+var pollObj1 = { 
+    id: 1,
+    name: 'Apples!', 
+    author: 'JohnnyApplecore@gmail.com',
+    description: 'What is your favorite type of apple?', 
+    choices: [
+        {label:'Gala', value: 3},
+        {label:'Red Delicious', value: 2},
+        {label:'Granny Smith', value: 1}
+    ],
+    voters: ['username1','username2','ipaddress1']
+};
+var pollObj2 = {
+    id: 2,
+    name: 'Fries!',
+    author: 'SuzyQ@gmail.com',
+    description: 'How many fries can you eat in one sitting?',
+    choices: [
+        {label:'1 serving', value: 3},
+        {label:'2-5 servings', value: 1},
+        {label:'6+ servings', value: 1}
+    ],
+    voters: ['username1','username2','ipaddress2']
+};
+
+
+// exports ======================================
 module.exports = function(app, passport) {
     
     // HOME PAGE ================================
     app.get('/', function(req, res){
+        // create locals
+        var locals = getLocals();
         // check if user present for layout.html purposes
-        if (req.user) locals.user = req.user;
+        if (req.user) {
+            locals.user = req.user;
+        } else {
+            locals.guest = "ipAddress";
+        }
         
-        // testing array
+        // retrieve all polls and render
+        mongoFn.query({}, function(resultObj){
+            locals.polls = resultObj.response;
+            res.render('index', locals);
+        });
         
-        res.render('index', locals);
+        // render
+        // res.render('index', locals);
     });
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
+        // create locals
+        var locals = getLocals();
         // check if user present for layout.html purposes
         if (req.user) locals.user = req.user;
         
@@ -41,6 +82,8 @@ module.exports = function(app, passport) {
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
+        // create locals
+        var locals = getLocals();
         // check if user present for layout.html purposes
         if (req.user) locals.user = req.user;
         
@@ -58,6 +101,8 @@ module.exports = function(app, passport) {
     // PROFILE PAGE =============================
     // this is protected, must be logged in to view
     app.get('/profile', isLoggedIn, function(req, res){
+        // create locals
+        var locals = getLocals();
         // pass in user by adding into locals object
         locals.user = req.user;
         res.render('profile', locals);
@@ -65,13 +110,42 @@ module.exports = function(app, passport) {
     
     // LOGOUT ===================================
     app.get('/logout', function(req, res){
+        // create locals
+        var locals = getLocals();
+        // logout
         req.logout();
         locals.user = false;
         res.redirect('/');
     });
+    
+    
+    // POLLS ====================================
+    app.get('/testpoll', function(req, res){
+        // create locals
+        var locals = getLocals();
+        // insert test
+        mongoFn.insert(pollObj1, function(result){
+            console.log(result);
+            mongoFn.insert(pollObj2, function(result){
+                console.log(result);
+                res.redirect('/');
+            });
+        });
+    });
+    
+    // route to log the next available id number (current largest + 1)
+    app.get('/nextid', function(req, res){
+        mongoFn.getNextId(function(results){
+            console.log('The next available id number is: ' + results.response);
+            res.redirect('/');
+        });
+    });
+      
 };
 
-// middleware to make sure a user is logged in
+
+// middleware ===================================
+// make sure a user is logged in
 function isLoggedIn(req, res, next){
     // are they authenticated?
     if (req.isAuthenticated()) {

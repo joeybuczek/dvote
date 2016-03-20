@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="small-1 large-2 columns">
+        <p></p>
+    </div>
+    <div class="small-10 large-8 columns">
+      
+        <h2 class="centered">Current Polls</h2>
+
+        <div class="poll-list">
+            {% for poll in polls %}
+                {% if loop.first %}<a href="#"><div class="poll-list-item poll-list-item-first">{% endif %}
+                {% if !loop.first && !loop.last %}<a href="#"><div class="poll-list-item">{% endif %}
+                {% if loop.last %}<a href="#"><div class="poll-list-item poll-list-item-last">{% endif %}
+                    <p>{{ poll.name }}</p>
+                </div></a>
+            {% endfor %}
+        </div>
+      
+    </div>
+    <div class="small-1 large-2 columns">
+        <p></p>
+    </div>
+</div>
+
+
+
+
+

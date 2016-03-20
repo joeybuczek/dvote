@@ -2,6 +2,7 @@
 var mongo = require('mongodb').MongoClient;
 var configDB = require('../config/database');
 
+
 // mongoFn object
 var mongoFn = {};
 
@@ -92,6 +93,35 @@ mongoFn.insert = function(insertObj, callback){
         } // end else   
     }); // end connect
 }; // end insert()
+
+
+// mongoFn getNextId - accepts a callback, returns an object that contains the next available id num
+mongoFn.getNextId = function(callback){
+    mongo.connect(configDB.url, function(err, db){
+        if (err) {
+            callback({'response':'Unable to connect to db'});
+        } else {
+            // aggregate through the data to return the largest id number
+            var data = db.collection('data');
+            var sort = { $sort : { 'id' : -1 } };
+            var limit = { $limit : 1 };
+            var project = { $project : { '_id' : 0, 'id' : 1} };
+            data.aggregate([sort, limit, project]).toArray(function(err, docs){
+                if (err) {
+                    returnObj = {'response':'Unable to retrieve docs'};
+                } else {
+                    // return the next available id num
+                    returnObj = {'response': docs[0].id + 1 };
+                }
+                
+                // close db and run callback
+                db.close();
+                callback(returnObj);
+                
+            }); // end aggregate
+        } // end else
+    }); // end connect
+}; //end getNextId
 
 
 // exports
