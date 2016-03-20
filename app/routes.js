@@ -11,7 +11,7 @@ function getLocals(){
 };
 
 
-// test object
+// test objects
 var pollObj1 = { 
     id: 1,
     name: 'Apples!', 
@@ -119,7 +119,31 @@ module.exports = function(app, passport) {
     });
     
     
-    // POLLS ====================================
+    // SINGLE POLL ==============================
+    app.get('/:id', function(req, res){
+        // create locals
+        var locals = getLocals();
+        // check if user present for layout.html purposes
+        if (req.user) {
+            locals.user = req.user;
+        } else {
+            locals.guest = "ipAddress";
+        }
+        
+        // query the db for the poll requested then render
+        var query = { 'id' : +req.params.id };
+        mongoFn.query(query, function(results){
+            
+            if (results.response.length > 0) {
+                locals.poll = results.response[0];
+                res.render('poll', locals);
+            } else {
+                res.redirect('/');   
+            }
+        });
+    });
+    
+    // TEST POLLS ===============================
     app.get('/testpoll', function(req, res){
         // create locals
         var locals = getLocals();

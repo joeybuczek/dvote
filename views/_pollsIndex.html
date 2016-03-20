@@ -8,9 +8,10 @@
 
         <div class="poll-list">
             {% for poll in polls %}
-                {% if loop.first %}<a href="#"><div class="poll-list-item poll-list-item-first">{% endif %}
-                {% if !loop.first && !loop.last %}<a href="#"><div class="poll-list-item">{% endif %}
-                {% if loop.last %}<a href="#"><div class="poll-list-item poll-list-item-last">{% endif %}
+                <a href="/{{ poll.id }}">
+                {% if loop.first %}<div class="poll-list-item poll-list-item-first">{% endif %}
+                {% if !loop.first && !loop.last %}<div class="poll-list-item">{% endif %}
+                {% if loop.last %}<div class="poll-list-item poll-list-item-last">{% endif %}
                     <p>{{ poll.name }}</p>
                 </div></a>
             {% endfor %}
