@@ -11,9 +11,12 @@
        
         <div class="row">
             <div class="small-1 large-2 columns"><p></p></div>
-            <div class="small-10 large-8 columns">
+            <div class="small-10 large-8 columns centered">
+
+                <canvas id="chartCanvas" height="300" width="300"></canvas>
 
                 <div class="choice-list">
+                    <p>Choices:</p>
                     {% for choice in poll.choices %}
                         <p>{{ choice.label }} : {{ choice.value }}</p>
                     {% endfor %}
@@ -25,4 +28,10 @@
     
     </div>
     
+    <!-- Chart.js -->
+    <script src="js/Chart.min.js"></script>
+    <script src="js/pieChart.js"></script>
+    
 {% endblock %}
+
+    

@@ -49,3 +49,6 @@
 .poll-list-item:hover {
     background-color: lightskyblue;
 }
+canvas {
+    border: 1px solid lightskyblue;
+}

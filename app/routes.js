@@ -36,6 +36,12 @@ var pollObj2 = {
     ],
     voters: ['username1','username2','ipaddress2']
 };
+var chartData = [{
+    value: 400,
+    color:"#F7464A",
+    highlight: "#FF5A5E",
+    label: "Red"
+}];
 
 
 // exports ======================================
@@ -129,6 +135,9 @@ module.exports = function(app, passport) {
         } else {
             locals.guest = "ipAddress";
         }
+        
+        // test sending of chartdata
+        locals.chartData = chartData; // how do I get this into the chart????
         
         // query the db for the poll requested then render
         var query = { 'id' : +req.params.id };
