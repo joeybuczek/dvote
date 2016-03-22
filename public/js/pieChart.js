@@ -1,4 +1,5 @@
-var data = [
+// example doughnut chart data
+var dataExample = [
     {
         value: 2,
         color:"#F7464A",
@@ -18,11 +19,17 @@ var data = [
         label: "Granny Smith"
     }
 ];
+
+// chart options
 var options = { 
     percentageInnerCutout : 50, 
     animateScale : false, 
     animationEasing : "easeOutQuart" 
 };
-var data2 = JSON.parse(document.getElementById('chartData').innerHTML);
+
+// get chartData from data-chartdata on page's span element
+var chartData = JSON.parse(document.getElementById('chartData').getAttribute('data-chartdata'));
+
+// create chart
 var ctx = document.getElementById('chartCanvas').getContext('2d');
-new Chart(ctx).Pie(data2, options);
+new Chart(ctx).Pie(chartData, options);

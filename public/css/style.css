@@ -3,7 +3,7 @@
     height: 55px;
 }
 .body-container {
-    margin: 30px;
+    margin: 30px 0;
 }
 .header-color-bar {
     background-color: lightskyblue;
@@ -18,6 +18,9 @@
 .menu-icon::after {
     background: #111;
     box-shadow: 0 7px 0 #111, 0 14px 0 #111; 
+}
+.auth-padding {
+    padding: 30px;
 }
 .centered {
     text-align: center;
