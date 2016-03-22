@@ -1,5 +1,6 @@
 // dependencies
-var mongoFn = require('./mongoFn');
+var mongoFn    = require('./mongoFn'),
+    dataFormat = require('./dataFormat');
 
 // local vars factory
 function getLocals(){
@@ -151,7 +152,7 @@ module.exports = function(app, passport) {
         }
         
         // test sending of chartdata
-        locals.chartData = chartData; // how do I get this into the chart????
+        // locals.chartData = chartData;
         
         // query the db for the poll requested then render
         var query = { 'id' : +req.params.id };
@@ -159,6 +160,7 @@ module.exports = function(app, passport) {
             
             if (results.response.length > 0) {
                 locals.poll = results.response[0];
+                locals.chartData = dataFormat(results.response[0]);
                 res.render('poll', locals);
             } else {
                 res.redirect('/');   
@@ -168,8 +170,6 @@ module.exports = function(app, passport) {
     
     // TEST POLLS ===============================
     app.get('/testpoll', function(req, res){
-        // create locals
-        var locals = getLocals();
         // insert test
         mongoFn.insert(pollObj1, function(result){
             console.log(result);
