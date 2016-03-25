@@ -18,16 +18,15 @@
                 <div id="legendDiv"></div>
                 
                 <div class="choice-list">
-                    <p>Choices:</p>
                     <table class="form-choices">
                         <form action="#" method="POST" name="pollChoices">
                             {% for choice in poll.choices %}
                                 <tr>
-                                    <td>
+                                    <td style="width:10%;">
                                         <input type="radio" name="choice" value="{{ choice.label }}">
                                     </td>
-                                    <td>
-                                        <p>{{ choice.label }}</p>
+                                    <td style="width:90%;">
+                                        <p style="text-align:left;">{{ choice.label }}</p>
                                     </td>
                                 <tr>
                             {% endfor %}

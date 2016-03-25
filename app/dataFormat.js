@@ -4,6 +4,8 @@ module.exports = function (dataObj) {
     var returnObj = [];
     var colorChoice = {};
     
+    // reset color counter
+    colorCounter = 0;
     // loop through choices
     for (var i = 0; i < choices.length; i++) {
         // get random color from color array
@@ -21,9 +23,23 @@ module.exports = function (dataObj) {
     return returnObj;
 };
 
+// counter for determining when end of chartColors elements
+var colorCounter;
+
 // chart colors function and array
 function colorPicker(index) {
-    return chartColors[Math.floor(Math.random() * chartColors.length)];
+    
+    // create return object
+    var returnObj = {};
+    
+    // determine if need to start over from first colorCharts element
+    if (colorCounter >= chartColors.length) { colorCounter = 0; }
+    
+    returnObj = chartColors[colorCounter];    
+    colorCounter++;
+    return returnObj;
+    
+    // return chartColors[Math.floor(Math.random() * chartColors.length)]; // deprecated randomness
 }
 
 var chartColors = [

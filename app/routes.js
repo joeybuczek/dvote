@@ -1,6 +1,14 @@
 // dependencies
 var mongoFn    = require('./mongoFn'),
-    dataFormat = require('./dataFormat');
+    dataFormat = require('./dataFormat'),
+    requestIP = require('request');
+
+// get public IP from 12.io using the request module (npm install request)
+var ip;
+requestIP("http://www.l2.io/ip", function(error, response, body){
+    if (error) throw error;
+    ip = body;
+});
 
 // local vars factory
 function getLocals(){
@@ -10,53 +18,6 @@ function getLocals(){
         subtitle: 'Make your digital voice count!' 
     };
 };
-
-
-// test objects
-var pollObj1 = { 
-    id: 1,
-    name: 'Apples!', 
-    author: 'JohnnyApplecore@gmail.com',
-    description: 'What is your favorite type of apple?', 
-    choices: [
-        {label:'Gala', value: 3},
-        {label:'Red Delicious', value: 2},
-        {label:'Granny Smith', value: 1}
-    ],
-    voters: ['username1','username2','ipaddress1']
-};
-var pollObj2 = {
-    id: 2,
-    name: 'Fries!',
-    author: 'SuzyQ@gmail.com',
-    description: 'How many fries can you eat in one sitting?',
-    choices: [
-        {label:'1 serving', value: 3},
-        {label:'2-5 servings', value: 1},
-        {label:'6+ servings', value: 1}
-    ],
-    voters: ['username1','username2','ipaddress2']
-};
-var chartData = [
-    {
-        value: 2,
-        color:"#F7464A",
-        highlight: "#FF5A5E",
-        label: "Red Delicious"
-    },
-    {
-        value: 3,
-        color:"#46BFBD",
-        highlight: "#5AD3D1",
-        label: "Gala"
-    },
-    {
-        value: 1,
-        color:"#FDB45C",
-        highlight: "#FFC870",
-        label: "Granny Smith"
-    }
-];
 
 
 // exports ======================================
@@ -69,8 +30,9 @@ module.exports = function(app, passport) {
         // check if user present for layout.html purposes
         if (req.user) {
             locals.user = req.user;
+            locals.isGuest = false;
         } else {
-            locals.guest = "ipAddress";
+            locals.isGuest = true;           
         }
         
         // retrieve all polls and render
@@ -124,9 +86,16 @@ module.exports = function(app, passport) {
     app.get('/profile', isLoggedIn, function(req, res){
         // create locals
         var locals = getLocals();
-        // pass in user by adding into locals object
-        locals.user = req.user;
-        res.render('profile', locals);
+        
+        // get IP address for guest
+        requestIP("http://www.l2.io/ip", function(error, response, body){
+            if (error) throw error;
+            locals.guestIP = body;
+            
+            // pass in user by adding into locals object
+            locals.user = req.user;
+            res.render('profile', locals);
+        });
     });
     
     // LOGOUT ===================================
@@ -170,7 +139,7 @@ module.exports = function(app, passport) {
     
     // TEST POLLS ===============================
     app.get('/testpoll', function(req, res){
-        // insert test
+        // insert test poll objects
         mongoFn.insert(pollObj1, function(result){
             console.log(result);
             mongoFn.insert(pollObj2, function(result){
@@ -201,3 +170,30 @@ function isLoggedIn(req, res, next){
         res.redirect('/');
     }
 }
+
+
+// test objects =================================
+var pollObj1 = { 
+    id: 1,
+    name: 'Apples!', 
+    author: 'JohnnyApplecore@gmail.com',
+    description: 'What is your favorite type of apple?', 
+    choices: [
+        {label:'Gala', value: 3},
+        {label:'Red Delicious', value: 2},
+        {label:'Granny Smith', value: 1}
+    ],
+    voters: ['username1','username2','ipaddress1']
+};
+var pollObj2 = {
+    id: 2,
+    name: 'Fries!',
+    author: 'SuzyQ@gmail.com',
+    description: 'How many fries can you eat in one sitting?',
+    choices: [
+        {label:'1 serving', value: 3},
+        {label:'2-5 servings', value: 1},
+        {label:'6+ servings', value: 1}
+    ],
+    voters: ['username1','username2','ipaddress2']
+};

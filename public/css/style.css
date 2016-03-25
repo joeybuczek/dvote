@@ -108,3 +108,6 @@ canvas {
     border-radius: 0.5em; /* Comment out if you prefer squarish samples */
     margin-right: 0.5em;
 }
+#legendDiv {
+    margin: 20px auto 30px;
+}

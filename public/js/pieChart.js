@@ -29,7 +29,7 @@ var options = {
     legendTemplate : legendTemplate
 };
 
-// get chartData from data-chartdata on page's span element
+// get chartData from data-chartdata on poll page's span element (sent in by route's 'locals' object)
 var chartData = JSON.parse(document.getElementById('chartData').getAttribute('data-chartdata'));
 
 // create chart
