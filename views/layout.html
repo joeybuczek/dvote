@@ -24,6 +24,7 @@
             <div class="top-bar-right">
                 <ul class="menu">
                     {% if (user) %}
+                        <li class="logged-in-as"><a href="/profile">{{ user.local.email }}</a></li>
                         <li><a href="/logout">Logout</a></li>
                     {% else %}
                         <li><a href="/login" class="main-text-color">Login</a></li>

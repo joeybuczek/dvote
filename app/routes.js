@@ -96,7 +96,7 @@ module.exports = function(app, passport) {
     });
     
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile',
+        successRedirect : '/',
         failureRedirect : '/login',
         failureFlash    : true
     }));
@@ -114,7 +114,7 @@ module.exports = function(app, passport) {
     });
     
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile',
+        successRedirect : '/',
         failureRedirect : '/signup',
         failureFlash    : true
     }));

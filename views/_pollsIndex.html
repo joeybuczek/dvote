@@ -4,7 +4,13 @@
     </div>
     <div class="small-10 large-8 columns">
       
-        <h2 class="centered">Current Polls</h2>
+        {% if (user) %}
+            <div class="new-poll-area centered">
+                <p><a href="#" class="button">New Poll</a></p>
+            </div>
+        {% endif %}
+      
+        <h3 class="centered">Current Polls</h3>
 
         <div class="poll-list">
             {% for poll in polls %}
