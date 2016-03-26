@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'poll_layout.html' %}
 
 {% block content %}
 
@@ -19,7 +19,8 @@
                 
                 <div class="choice-list">
                     <table class="form-choices">
-                        <form action="#" method="POST" name="pollChoices">
+                        <!-- Form Start -->
+                        <form action="/vote" method="POST" name="pollChoices">
                             {% for choice in poll.choices %}
                                 <tr>
                                     <td style="width:10%;">
@@ -32,10 +33,13 @@
                             {% endfor %}
                             <tr>
                                 <td>
+                                    <input type="hidden" name="voter" value="{{ user.local.email || guest }}">
+                                    <input type="hidden" name="poll_id" value="{{ poll.id }}">
                                     <input type="submit" class="button small" value="Submit">
                                 </td>
                             </tr>
                         </form>
+                        <!-- Form End -->
                     </table>
                 </div>
             
@@ -47,8 +51,8 @@
     
     <!-- Chart.js -->
     <span id="chartData" style="display:none;" data-chartdata='{{ JSON.stringify(chartData) }}'></span>
-    <script src="js/Chart.min.js"></script>
-    <script src="js/pieChart.js"></script>
+    <script src="../js/Chart.min.js"></script>
+    <script src="../js/pieChart.js"></script>
     
 {% endblock %}
 

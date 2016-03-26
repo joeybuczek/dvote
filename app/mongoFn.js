@@ -107,13 +107,14 @@ mongoFn.getNextId = function(callback){
             var limit = { $limit : 1 };
             var project = { $project : { '_id' : 0, 'id' : 1} };
             data.aggregate([sort, limit, project]).toArray(function(err, docs){
+                var returnObj = {};
                 if (err) {
                     returnObj = {'response':'Unable to retrieve docs'};
                 } else {
                     // return the next available id num
                     returnObj = {'response': docs[0].id + 1 };
                 }
-                
+
                 // close db and run callback
                 db.close();
                 callback(returnObj);

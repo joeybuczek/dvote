@@ -14,7 +14,7 @@
 
         <div class="poll-list">
             {% for poll in polls %}
-                <a href="/{{ poll.id }}">
+                <a href="/poll/{{ poll.id }}">
                 {% if loop.first %}<div class="poll-list-item poll-list-item-first">{% endif %}
                 {% if !loop.first && !loop.last %}<div class="poll-list-item">{% endif %}
                 {% if loop.last %}<div class="poll-list-item poll-list-item-last">{% endif %}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{ layoutTitle }}</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../css/foundation.css">
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <body>
+        
+        <!-- menu --> 
+        <div class="title-bar" data-responsive-toggle="toggle-menu" data-hide-for="medium">
+            <button class="menu-icon dark" type="button" data-toggle></button>
+            <div class="title-bar-title"></div>
+        </div>
+        <div class="top-bar" id="toggle-menu">
+            <div class="top-bar-left">
+                <ul class="menu">
+                    <li><a href="/"><strong class="main-text-color">{{ title }}</strong></a></li>
+                </ul>
+            </div>
+            <div class="top-bar-right">
+                <ul class="menu">
+                    {% if (user) %}
+                        <li class="logged-in-as"><a href="/profile">{{ user.local.email }}</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {% else %}
+                        <li><a href="/login" class="main-text-color">Login</a></li>
+                        <li><a href="/signup" class="main-text-color">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+        <!-- body -->
+        {% block content %}{% endblock %}
+        
+        <!-- css js -->
+        <script src="../js/vendor/jquery.min.js"></script>
+        <script src="../js/vendor/what-input.min.js"></script>
+        <script src="../js/foundation.min.js"></script>
+        <script>
+            $(document).foundation();
+        </script>
+    </body>    
+</html>

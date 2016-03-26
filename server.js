@@ -29,7 +29,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser());
 
 // static files
-app.use(express.static('public'));
+app.use(express.static('public', {redirect: false}));
 
 // view engine (swig)
 app.engine('html', swig.renderFile);

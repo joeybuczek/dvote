@@ -3,19 +3,12 @@ var mongoFn    = require('./mongoFn'),
     dataFormat = require('./dataFormat'),
     requestIP = require('request');
 
-// get public IP from 12.io using the request module (npm install request)
-var ip;
-requestIP("http://www.l2.io/ip", function(error, response, body){
-    if (error) throw error;
-    ip = body;
-});
-
 // local vars factory
 function getLocals(){
     return { 
         layoutTitle: 'dVOTE - Digital Voting App - FCC Challenge',
         title: 'dVOTE',
-        subtitle: 'Make your digital voice count!' 
+        subtitle: 'Make your digital voice count!'
     };
 };
 
@@ -27,17 +20,18 @@ module.exports = function(app, passport) {
     app.get('/', function(req, res){
         // create locals
         var locals = getLocals();
-        // check if user present for layout.html purposes
+        // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-            locals.isGuest = false;
         } else {
-            locals.isGuest = true;           
+            locals.guest = req._remoteAddress;
         }
         
         // retrieve all polls and render
         mongoFn.query({}, function(resultObj){
+            console.log('can you see this?');
             locals.polls = resultObj.response;
+            res.status(200);
             res.render('index', locals);
         });
         
@@ -47,10 +41,13 @@ module.exports = function(app, passport) {
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
-        // create locals
         var locals = getLocals();
-        // check if user present for layout.html purposes
-        if (req.user) locals.user = req.user;
+        // add user info if present, otherwise add guest ip
+        if (req.user) {
+            locals.user = req.user;
+        } else {
+            locals.guest = req._remoteAddress;
+        }
         
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('loginMessage');
@@ -67,8 +64,12 @@ module.exports = function(app, passport) {
     app.get('/signup', function(req, res){
         // create locals
         var locals = getLocals();
-        // check if user present for layout.html purposes
-        if (req.user) locals.user = req.user;
+        // add user info if present, otherwise add guest ip
+        if (req.user) {
+            locals.user = req.user;
+        } else {
+            locals.guest = req._remoteAddress;
+        }
         
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('signupMessage');
@@ -86,16 +87,14 @@ module.exports = function(app, passport) {
     app.get('/profile', isLoggedIn, function(req, res){
         // create locals
         var locals = getLocals();
-        
-        // get IP address for guest
-        requestIP("http://www.l2.io/ip", function(error, response, body){
-            if (error) throw error;
-            locals.guestIP = body;
-            
-            // pass in user by adding into locals object
+        // add user info if present, otherwise add guest ip
+        if (req.user) {
             locals.user = req.user;
-            res.render('profile', locals);
-        });
+        } else {
+            locals.guest = req._remoteAddress;
+        }
+        
+        res.render('profile', locals);
     });
     
     // LOGOUT ===================================
@@ -110,18 +109,15 @@ module.exports = function(app, passport) {
     
     
     // SINGLE POLL ==============================
-    app.get('/:id', function(req, res){
+    app.get('/poll/:id', function(req, res){
         // create locals
-        var locals = getLocals();
-        // check if user present for layout.html purposes
+       var locals = getLocals();
+        // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
         } else {
-            locals.guest = "ipAddress";
+            locals.guest = req._remoteAddress;
         }
-        
-        // test sending of chartdata
-        // locals.chartData = chartData;
         
         // query the db for the poll requested then render
         var query = { 'id' : +req.params.id };
@@ -132,9 +128,15 @@ module.exports = function(app, passport) {
                 locals.chartData = dataFormat(results.response[0]);
                 res.render('poll', locals);
             } else {
-                res.redirect('/');   
+                res.render('404', locals);   
             }
         });
+    });
+    
+    // POLL SUBMIT
+    app.post('/vote', function(req, res){
+        console.log(req.body);
+        res.redirect('/poll/' + req.body.poll_id);
     });
     
     // TEST POLLS ===============================
@@ -150,7 +152,7 @@ module.exports = function(app, passport) {
     });
     
     // route to log the next available id number (current largest + 1)
-    app.get('/nextid', function(req, res){
+    app.get('/next', function(req, res){
         mongoFn.getNextId(function(results){
             console.log('The next available id number is: ' + results.response);
             res.redirect('/');
@@ -171,6 +173,12 @@ function isLoggedIn(req, res, next){
     }
 }
 
+
+// voter validation =============================
+// check if user present in db doc's voters array
+// function voted(voters, voter) { 
+//     return voters.indexOf(voter) > -1 ? true : false;   
+// }
 
 // test objects =================================
 var pollObj1 = { 
