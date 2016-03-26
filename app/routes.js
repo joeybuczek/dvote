@@ -133,7 +133,7 @@ module.exports = function(app, passport) {
         });
     });
     
-    // NEW POLL
+    // GET NEW POLL =============================
     app.get('/new_poll', isLoggedIn, function(req, res){
         // create locals
        var locals = getLocals();
@@ -142,7 +142,17 @@ module.exports = function(app, passport) {
         res.render('new_poll', locals);
     });
     
-    // POLL SUBMIT VOTE
+    // POST NEW POLL ============================
+    app.post('/new_poll', isLoggedIn, function(req, res){
+        // add posting to mongodb functionality here
+        // for now, test by logging to console and 
+        //  redirecting back to new poll page
+        // log tests conclude labels are entered as array
+        console.log(req.body);
+        res.redirect('/new_poll');
+    });
+    
+    // POLL SUBMIT VOTE =========================
     app.post('/vote', function(req, res){
         console.log(req.body);
         res.redirect('/poll/' + req.body.poll_id);
@@ -160,8 +170,9 @@ module.exports = function(app, passport) {
         });
     });
     
+    // NEXTID LOGGER ============================
     // route to log the next available id number (current largest + 1)
-    app.get('/next', function(req, res){
+    app.get('/nextid', function(req, res){
         mongoFn.getNextId(function(results){
             console.log('The next available id number is: ' + results.response);
             res.redirect('/');
