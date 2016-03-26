@@ -1,0 +1,70 @@
+{% extends 'poll_layout.html' %}
+
+{% block content %}
+
+    <div class="header-color-bar">
+        <h2>New Poll</h2>
+        <h3>Go ahead, be inquisitive!</h3>
+    </div>
+    
+    <div class="body-container">
+       
+        <div class="row">
+            <div class="small-1 large-2 columns"><p></p></div>
+            <div class="small-10 large-8 columns centered">
+                
+                <div class="choice-list">
+                    <table class="form-new-poll">
+                        
+                        <!-- Form Start -->
+                        <form action="/poll/new" method="POST" name="newPoll">
+                            
+                            <tr>
+                                <td>
+                                    <p>Title:</p>
+                                    <input type="text" name="title">
+                                    <p>Question:</p>
+                                    <input type="text" name="description">
+                                </td>
+                            </tr>
+                            
+                            <!-- Enter Choices Start -->
+                            <tr>
+                                <td id="user-choices">
+                                    <div id="choice-1">
+                                        <p>Choice:</p>
+                                        <input type="text" name="label-1">
+                                    </div>
+                                    <div id="choice-2">
+                                        <p>Choice:</p>
+                                        <input type="text" name="label-2">
+                                    </div>
+                                    <div id="choice-3">
+                                        <p>Choice:</p>
+                                        <input type="text" name="label-3">
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Enter Choices End -->
+                            
+                            <tr>
+                                <td>
+                                    <input type="submit" class="small button" value="Submit">
+                                </td>
+                            </tr>
+                            
+                        </form>
+                        <!-- Form End -->
+                        
+                    </table>
+                </div>
+            
+            </div>
+            <div class="small-1 large-2 columns"><p></p></div>
+        </div>
+    
+    </div>
+    
+{% endblock %}
+
+    

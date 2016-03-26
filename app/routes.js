@@ -133,7 +133,16 @@ module.exports = function(app, passport) {
         });
     });
     
-    // POLL SUBMIT
+    // NEW POLL
+    app.get('/new_poll', isLoggedIn, function(req, res){
+        // create locals
+       var locals = getLocals();
+       locals.user = req.user;
+        
+        res.render('new_poll', locals);
+    });
+    
+    // POLL SUBMIT VOTE
     app.post('/vote', function(req, res){
         console.log(req.body);
         res.redirect('/poll/' + req.body.poll_id);
