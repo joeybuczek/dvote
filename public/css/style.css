@@ -79,7 +79,9 @@
 }
 .form-new-poll p {
     text-align: left;
-    margin-left: 10px;
+}
+.choice {
+    text-align: left;
 }
 
 /* Chart.js */

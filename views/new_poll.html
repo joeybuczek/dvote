@@ -14,49 +14,38 @@
             <div class="small-10 large-8 columns centered">
                 
                 <div class="choice-list">
-                    <table class="form-new-poll">
                         
-                        <!-- Form Start -->
-                        <form action="/new_poll" method="POST" name="newPoll">
+                    <!-- Form Start -->
+                    <form action="/new_poll" method="POST" name="newPoll">
+                
+                        <input type="hidden" name="author" value="{{ user.local.email }}">
+                
+                        <p>Poll Name:</p>
+                        <input type="text" name="name" placeholder="Enter your question here.">
                             
-                            <tr>
-                                <td>
-                                    <p>Title:</p>
-                                    <input type="text" name="title">
-                                    <p>Question:</p>
-                                    <input type="text" name="description">
-                                </td>
-                            </tr>
-                            
-                            <!-- Enter Choices Start -->
-                            <tr>
-                                <td id="user-choices">
-                                    <div class="choice">
-                                        <p>Choice:</p>
-                                        <input type="text" name="labels">
-                                    </div>
-                                    <div class="choice">
-                                        <p>Choice:</p>
-                                        <input type="text" name="labels">
-                                    </div>
-                                    <div class="choice">
-                                        <p>Choice:</p>
-                                        <input type="text" name="labels">
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Enter Choices End -->
-                            
-                            <tr>
-                                <td>
-                                    <input type="submit" class="small button" value="Submit">
-                                </td>
-                            </tr>
-                            
-                        </form>
-                        <!-- Form End -->
+                        <!-- Enter Choices Start -->
+                        <div id="user-choices">
+                            <div>
+                                <p class="choice">Choice:</p>
+                                <input type="text" name="labels[]">
+                            </div>
+                            <div>
+                                <p class="choice">Choice:</p>
+                                <input type="text" name="labels[]">
+                            </div>
+                            <div id="last-choice">
+                                <p class="choice">Choice:</p>
+                                <input type="text" name="labels[]">
+                            </div>  
+                        </div> 
+                        <!-- Enter Choices End -->
                         
-                    </table>
+                        <span class="small button" id="new-choice-button" onclick="newChoice()">Add Choice</span>
+                        <input type="submit" class="small button" value="Submit">
+
+                    </form>
+                    <!-- Form End -->
+                        
                 </div>
             
             </div>
@@ -65,6 +54,18 @@
     
     </div>
     
-{% endblock %}
-
+    <!-- <script src="js/vendor/jquery.min.js"></script> -->
+    <script>
+        var counter = 3;
+        function newChoice(){
+            // inc counter
+            counter++;
+            // define new element
+            var div = document.createElement('div');
+            div.innerHTML = '<p class="choice">Choice:</p><input type="text" name="labels[]">';
+            // append element
+            document.getElementById('last-choice').appendChild(div); 
+        }
+    </script>
     
+{% endblock %}

@@ -29,7 +29,6 @@ module.exports = function(app, passport) {
         
         // retrieve all polls and render
         mongoFn.query({}, function(resultObj){
-            console.log('can you see this?');
             locals.polls = resultObj.response;
             res.status(200);
             res.render('index', locals);
