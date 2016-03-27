@@ -147,8 +147,16 @@ module.exports = function(app, passport) {
         // for now, test by logging to console and 
         //  redirecting back to new poll page
         // log tests conclude labels are entered as array
-        console.log(req.body);
-        res.redirect('/new_poll');
+        
+        // validate submission
+        if ((req.body.name != '') && (req.body.labels.length > 1)) {
+            // something exists, post to mongodb
+            console.log(req.body);
+            res.redirect('/');
+        } else {
+            // didn't pass validation
+            res.redirect('/new_poll');
+        }
     });
     
     // POLL SUBMIT VOTE =========================

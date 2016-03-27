@@ -20,22 +20,22 @@
                 
                         <input type="hidden" name="author" value="{{ user.local.email }}">
                 
-                        <p>Poll Name:</p>
-                        <input type="text" name="name" placeholder="Enter your question here.">
+                        <p class="choice">Poll Name:</p>
+                        <input type="text" name="name" placeholder="Enter name or question of poll (required)" required>
                             
                         <!-- Enter Choices Start -->
                         <div id="user-choices">
                             <div>
                                 <p class="choice">Choice:</p>
-                                <input type="text" name="labels[]">
+                                <input type="text" name="labels[]" placeholder="(required)" required>
                             </div>
                             <div>
                                 <p class="choice">Choice:</p>
-                                <input type="text" name="labels[]">
+                                <input type="text" name="labels[]" placeholder="(required)" required>
                             </div>
                             <div id="last-choice">
                                 <p class="choice">Choice:</p>
-                                <input type="text" name="labels[]">
+                                <input type="text" name="labels[]" placeholder="(optional)">
                             </div>  
                         </div> 
                         <!-- Enter Choices End -->
