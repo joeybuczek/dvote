@@ -54,18 +54,7 @@
     
     </div>
     
-    <!-- <script src="js/vendor/jquery.min.js"></script> -->
-    <script>
-        var counter = 3;
-        function newChoice(){
-            // inc counter
-            counter++;
-            // define new element
-            var div = document.createElement('div');
-            div.innerHTML = '<p class="choice">Choice:</p><input type="text" name="labels[]">';
-            // append element
-            document.getElementById('last-choice').appendChild(div); 
-        }
-    </script>
+    <!-- Poll Scripts -->
+    <script src="js/polls.js"></script>
     
 {% endblock %}
