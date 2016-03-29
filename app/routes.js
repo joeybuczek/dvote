@@ -127,7 +127,18 @@ module.exports = function(app, passport) {
         if ((req.body.name != '') && (req.body.labels.length > 1)) {
             // something exists, post to mongodb
             console.log(req.body);
-            res.redirect('/');
+            
+            // convert response into document format for db
+            insertPollObject(req.body, function(insertResult){
+                // test response by logging
+                console.log(insertResult);
+                
+                
+                
+                res.redirect('/');
+            });
+            
+            
         } else {
             // didn't pass validation
             res.redirect('/new_poll');
@@ -206,6 +217,36 @@ function isLoggedIn(req, res, next){
 // function voted(voters, voter) { 
 //     return voters.indexOf(voter) > -1 ? true : false;   
 // }
+
+// Create Poll Object
+// accepts a POST object and callback, updates mongodb, and returns object (success/error)
+function insertPollObject(postData, callback){
+    
+    // get next id
+    mongoFn.getNextId(function(results){
+        // store next id response
+        var nextId = results.response;
+        
+        // convert postData into db document with initial data
+        var insertDocument = { 
+            id:     nextId,
+            name:   postData.name,
+            author: postData.author
+        };
+        // add labels from postData
+        var choicesArray = [];
+        postData.labels.forEach(function(label){
+            // loop through labels and push to array
+            choicesArray.push({ "label": label, "value": 0 });
+        });
+        insertDocument.choices = choicesArray;
+        
+        // test insertDocument by sending back to be console.logged
+        callback(insertDocument);
+        
+    }); // end getNextId
+}
+
 
 // test objects =================================
 var pollObj1 = { 
