@@ -107,33 +107,8 @@ module.exports = function(app, passport) {
     });
     
     
-    // SINGLE POLL ==============================
-    app.get('/poll/:id', function(req, res){
-        // create locals
-       var locals = getLocals();
-        // add user info if present, otherwise add guest ip
-        if (req.user) {
-            locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
-        }
-        
-        // query the db for the poll requested then render
-        var query = { 'id' : +req.params.id };
-        mongoFn.query(query, function(results){
-            
-            if (results.response.length > 0) {
-                locals.poll = results.response[0];
-                locals.chartData = dataFormat(results.response[0]);
-                res.render('poll', locals);
-            } else {
-                res.render('404', locals);   
-            }
-        });
-    });
-    
     // GET NEW POLL =============================
-    app.get('/new_poll', isLoggedIn, function(req, res){
+    app.get('/poll/new', isLoggedIn, function(req, res){
         // create locals
        var locals = getLocals();
        locals.user = req.user;
@@ -157,6 +132,31 @@ module.exports = function(app, passport) {
             // didn't pass validation
             res.redirect('/new_poll');
         }
+    });
+    
+    // SINGLE POLL ==============================
+    app.get('/poll/:id', function(req, res){
+        // create locals
+       var locals = getLocals();
+        // add user info if present, otherwise add guest ip
+        if (req.user) {
+            locals.user = req.user;
+        } else {
+            locals.guest = req._remoteAddress;
+        }
+        
+        // query the db for the poll requested then render
+        var query = { 'id' : +req.params.id };
+        mongoFn.query(query, function(results){
+            
+            if (results.response.length > 0) {
+                locals.poll = results.response[0];
+                locals.chartData = dataFormat(results.response[0]);
+                res.render('poll', locals);
+            } else {
+                res.render('404', locals);   
+            }
+        });
     });
     
     // POLL SUBMIT VOTE =========================
