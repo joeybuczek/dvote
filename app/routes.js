@@ -120,22 +120,23 @@ module.exports = function(app, passport) {
     app.post('/new_poll', isLoggedIn, function(req, res){
         // add posting to mongodb functionality here
         // for now, test by logging to console and 
-        //  redirecting back to new poll page
-        // log tests conclude labels are entered as array
         
         // validate submission
         if ((req.body.name != '') && (req.body.labels.length > 1)) {
             // something exists, post to mongodb
-            console.log(req.body);
+            // console.log(req.body);
             
             // convert response into document format for db
-            insertPollObject(req.body, function(insertResult){
-                // test response by logging
-                console.log(insertResult);
+            createPollObject(req.body, function(insertResult){
                 
+                // insert formatted document
+                mongoFn.insert(insertResult, function(result){
+                    
+                    // log result and redirect to poll for now
+                    console.log(result);
+                    res.redirect('/poll/' + insertResult.id);
+                });
                 
-                
-                res.redirect('/');
             });
             
             
@@ -172,8 +173,22 @@ module.exports = function(app, passport) {
     
     // POLL SUBMIT VOTE =========================
     app.post('/vote', function(req, res){
-        console.log(req.body);
-        res.redirect('/poll/' + req.body.poll_id);
+        // for now, log and redirect back to poll
+        // console.log(req.body);
+        // res.redirect('/poll/' + req.body.poll_id);
+        
+        // create query for db lookup
+        var query = { "id": parseInt(req.body.poll_id), "choices.label": req.body.choice };
+        // create update object
+        var update = { "$inc" : { "choices.$.value" : 1 }, "$addToSet" : { "voters": req.body.voter } };
+        console.log(query);
+        console.log(update);
+        // update in db
+        mongoFn.update(query, update, function(result){
+            console.log(result);
+            res.redirect('/poll/' + req.body.poll_id);
+        });
+        
     });
     
     // TEST POLLS ===============================
@@ -220,7 +235,7 @@ function isLoggedIn(req, res, next){
 
 // Create Poll Object
 // accepts a POST object and callback, updates mongodb, and returns object (success/error)
-function insertPollObject(postData, callback){
+function createPollObject(postData, callback){
     
     // get next id
     mongoFn.getNextId(function(results){

@@ -1,3 +1,4 @@
+"use strict;"
 // set up ======================================================================
 // env vars
 if (!process.env.SESSION_SECRET) { require('./env'); }

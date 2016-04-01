@@ -125,5 +125,30 @@ mongoFn.getNextId = function(callback){
 }; //end getNextId
 
 
+// mongoFn update - accepts 2 objects and a callback, returns an object
+mongoFn.update = function(query, update, callback){
+    mongo.connect(configDB.url, function(err, db){
+        if (err) {
+            callback({'response':'Unable to connect to db'});
+        } else {
+            
+            var data = db.collection('data');
+            data.updateOne(query, update, function(err, result){
+                var returnObj = {};
+                if (err) {
+                    returnObj = { 'response' : 'Error: Unable to update document' };
+                } else {
+                    returnObj = { 'response' : result.result };
+                }
+                
+                db.close();
+                callback(returnObj);
+                
+            }); // end updateOne
+        } // end else
+    }); // end connect
+}; // end update
+
+
 // exports
 module.exports = mongoFn;
