@@ -169,6 +169,16 @@ module.exports = function(app, passport) {
         }); // end query
     }); // end app.get('/poll/:id')
     
+    // DELETE POLL ==============================
+    app.delete('/delete_poll/:id', isLoggedIn, function(req, res){
+        // create remove query object, then remove
+        var removeQuery = {"id": parseInt(req.params.id)};
+        mongoFn.remove(removeQuery, function(result){
+            console.log(result);
+            // redirect is handled in the ajax call on the profile page
+        }); // end remove
+    }); // end delete
+    
     // POLL SUBMIT VOTE =========================
     app.post('/vote', function(req, res){
         // create query for db lookup

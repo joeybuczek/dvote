@@ -20,8 +20,8 @@
                 <div class="my-polls">
                     <!-- Loop through polls -->
                     {% for poll in polls %}
-                        <p>
-                            <span class="alert label delete-button">&times;</span>
+                        <p id="poll-{{poll.id}}">
+                            <span onclick="deletePoll({{poll.id}})" class="alert label delete-button">&times;</span>
                             <a href="/poll/{{poll.id}}">{{poll.name}}</a>
                         </p>
                     {% endfor %}
@@ -35,6 +35,16 @@
         </div>
         
     </div>
+    
+    <script src="js/vendor/jquery.min.js"></script>
+    <script>
+        function deletePoll(poll_id){
+            if (confirm("Are you sure you want to delete this poll?")) {
+                $.ajax({ url: '/delete_poll/' + poll_id, type: 'DELETE', success: function(result){} });
+                $('#poll-' + poll_id).hide();
+            }
+        }
+    </script>
 
 {% endblock %}
 

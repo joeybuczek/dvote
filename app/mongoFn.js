@@ -150,5 +150,30 @@ mongoFn.update = function(query, update, callback){
 }; // end update
 
 
+// mongoFn remove - accepts an object and a callback, returns an object
+mongoFn.remove = function(removeQuery, callback){
+    mongo.connect(configDB.url, function(err, db){
+        if (err) {
+            callback({'response':'Unable to connect to db'});
+        } else {
+
+            var data = db.collection('data');
+            data.deleteOne(removeQuery, function(err, result){
+                var returnObj = {};
+                if (err) {
+                    returnObj = { 'response' : 'Error: Unable to remove document' };
+                } else {
+                    returnObj = { 'response' : result.result };
+                }
+                
+                db.close();
+                callback(returnObj);
+                
+            }); // end remove One
+        } // end else
+    }); // end connect
+}; // end mongoFn remove
+
+
 // exports
 module.exports = mongoFn;
