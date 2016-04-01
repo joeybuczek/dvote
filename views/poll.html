@@ -17,6 +17,9 @@
                 <canvas id="chartCanvas" height="300" width="300"></canvas>
                 <div id="legendDiv"></div>
                 
+                {% if (user) %}
+                 {% if (!voted) %}
+                
                 <div class="choice-list">
                     <table class="form-choices">
                         <!-- Form Start -->
@@ -42,6 +45,9 @@
                         <!-- Form End -->
                     </table>
                 </div>
+                
+                 {% endif %}
+                {% endif %}
             
             </div>
             <div class="small-1 large-2 columns"><p></p></div>

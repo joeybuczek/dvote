@@ -23,8 +23,6 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
         }
         
         // retrieve all polls and render
@@ -32,11 +30,9 @@ module.exports = function(app, passport) {
             locals.polls = resultObj.response;
             res.status(200);
             res.render('index', locals);
-        });
-        
-        // render
-        // res.render('index', locals);
-    });
+        }); // end query
+
+    }); // end app.get('/')
     
     // LOGIN PAGE ===============================
     app.get('/login', function(req, res){
@@ -44,20 +40,18 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
         }
         
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('loginMessage');
         res.render('login', locals);
-    });
+    }); // end app.post('/login')
     
     app.post('/login', passport.authenticate('local-login', {
         successRedirect : '/',
         failureRedirect : '/login',
         failureFlash    : true
-    }));
+    })); // end app.post('/login')
     
     // SIGNUP PAGE ==============================
     app.get('/signup', function(req, res){
@@ -66,20 +60,18 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
         }
         
         // pass in any flash messages by adding to the locals object
         locals.message = req.flash('signupMessage');
         res.render('signup', locals);
-    });
+    }); // end end app.get('/signup')
     
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect : '/',
         failureRedirect : '/signup',
         failureFlash    : true
-    }));
+    })); // end app.post('/signup')
     
     // PROFILE PAGE =============================
     // this is protected, must be logged in to view
@@ -89,12 +81,17 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
         }
         
-        res.render('profile', locals);
-    });
+        // gather all polls for this user
+        var query = {"author":locals.user.local.email};
+        mongoFn.query(query, function(resultObj){
+            locals.polls = resultObj.response;
+            res.status(200);
+            res.render('profile', locals);
+            
+        }); // end query
+    }); // end app.get('/profile')
     
     // LOGOUT ===================================
     app.get('/logout', function(req, res){
@@ -104,7 +101,7 @@ module.exports = function(app, passport) {
         req.logout();
         locals.user = false;
         res.redirect('/');
-    });
+    }); // end app.get('/logout')
     
     
     // GET NEW POLL =============================
@@ -114,37 +111,29 @@ module.exports = function(app, passport) {
        locals.user = req.user;
         
         res.render('new_poll', locals);
-    });
+    }); // end app.get('/poll/new')
     
     // POST NEW POLL ============================
     app.post('/new_poll', isLoggedIn, function(req, res){
-        // add posting to mongodb functionality here
-        // for now, test by logging to console and 
-        
         // validate submission
         if ((req.body.name != '') && (req.body.labels.length > 1)) {
-            // something exists, post to mongodb
-            // console.log(req.body);
-            
+         
             // convert response into document format for db
             createPollObject(req.body, function(insertResult){
                 
                 // insert formatted document
                 mongoFn.insert(insertResult, function(result){
-                    
-                    // log result and redirect to poll for now
-                    console.log(result);
+                    // redirect to new poll
                     res.redirect('/poll/' + insertResult.id);
-                });
+                }); // end insert
                 
-            });
-            
+            }); // end createPollObject
             
         } else {
             // didn't pass validation
             res.redirect('/new_poll');
-        }
-    });
+        } // end else
+    }); // end app.post('/new_poll')
     
     // SINGLE POLL ==============================
     app.get('/poll/:id', function(req, res){
@@ -153,43 +142,45 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
-        } else {
-            locals.guest = req._remoteAddress;
         }
-        
+
         // query the db for the poll requested then render
         var query = { 'id' : +req.params.id };
         mongoFn.query(query, function(results){
             
             if (results.response.length > 0) {
-                locals.poll = results.response[0];
-                locals.chartData = dataFormat(results.response[0]);
+                var pollObj = results.response[0];
+                locals.poll = pollObj;
+                locals.chartData = dataFormat(pollObj);
+
+                // check if user already voted and set locals.voted to true/false
+                if ((locals.user) && (pollObj.voters)) {
+                    if (pollObj.voters.indexOf(locals.user.local.email) >= 0) {
+                        locals.voted = true;
+                    } else {
+                        locals.voted = false;
+                    }
+                }
+                
                 res.render('poll', locals);
             } else {
                 res.render('404', locals);   
-            }
-        });
-    });
+            } // end else
+        }); // end query
+    }); // end app.get('/poll/:id')
     
     // POLL SUBMIT VOTE =========================
     app.post('/vote', function(req, res){
-        // for now, log and redirect back to poll
-        // console.log(req.body);
-        // res.redirect('/poll/' + req.body.poll_id);
-        
         // create query for db lookup
         var query = { "id": parseInt(req.body.poll_id), "choices.label": req.body.choice };
         // create update object
         var update = { "$inc" : { "choices.$.value" : 1 }, "$addToSet" : { "voters": req.body.voter } };
-        console.log(query);
-        console.log(update);
+
         // update in db
         mongoFn.update(query, update, function(result){
-            console.log(result);
             res.redirect('/poll/' + req.body.poll_id);
-        });
-        
-    });
+        }); // end update
+    }); // end app.post('/vote')
     
     // TEST POLLS ===============================
     app.get('/testpoll', function(req, res){
@@ -199,9 +190,9 @@ module.exports = function(app, passport) {
             mongoFn.insert(pollObj2, function(result){
                 console.log(result);
                 res.redirect('/');
-            });
-        });
-    });
+            }); // end insert 2
+        }); // end insert 1
+    }); // end app.get('/testpoll')
     
     // NEXTID LOGGER ============================
     // route to log the next available id number (current largest + 1)
@@ -209,10 +200,10 @@ module.exports = function(app, passport) {
         mongoFn.getNextId(function(results){
             console.log('The next available id number is: ' + results.response);
             res.redirect('/');
-        });
-    });
+        }); // end getNextId()
+    }); // end app.get('/nextid')
       
-};
+}; // end module.exports
 
 
 // middleware ===================================

@@ -70,9 +70,6 @@
 .new-poll-area p {
     margin: 0;
 }
-.choice-list {
-    /* border: 1px solid lightskyblue; */
-}
 .form-choices {
     width: 300px;
     margin: 0 auto;
@@ -83,10 +80,19 @@
 .choice {
     text-align: left;
 }
-
-/* Chart.js */
-canvas {
-    /* border: 1px solid lightskyblue; */
+.my-polls {
+    margin-top: 30px;
+}
+.delete-button {
+    position: relative;
+    top: -2px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 25%;
+}
+.delete-button:hover {
+    background-color: #500;
+    color: red;
 }
 
 /* Chart Legends */
