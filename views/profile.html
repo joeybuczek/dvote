@@ -22,6 +22,7 @@
                     {% for poll in polls %}
                         <p id="poll-{{poll.id}}">
                             <span onclick="deletePoll({{poll.id}})" class="alert label delete-button">&times;</span>
+                            <span onclick="urlCopy({{poll.id}})" class="label label-button">url</span>
                             <a href="/poll/{{poll.id}}">{{poll.name}}</a>
                         </p>
                     {% endfor %}
@@ -43,6 +44,9 @@
                 $.ajax({ url: '/delete_poll/' + poll_id, type: 'DELETE', success: function(result){} });
                 $('#poll-' + poll_id).hide();
             }
+        }
+        function urlCopy(poll_id){
+            prompt('Copy the url below to share this poll!','/dvote.herokuapp.com/poll/' + poll_id);
         }
     </script>
 

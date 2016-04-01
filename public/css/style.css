@@ -83,12 +83,15 @@
 .my-polls {
     margin-top: 30px;
 }
-.delete-button {
+.label-button, .delete-button {
     position: relative;
     top: -2px;
-    margin: 0 10px;
+    margin: 0px;
     cursor: pointer;
     border-radius: 25%;
+}
+.label-button {
+    margin-right: 10px;
 }
 .delete-button:hover {
     background-color: #500;
