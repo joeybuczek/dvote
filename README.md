@@ -4,7 +4,7 @@ Free Code Camp Challenge
 
 dVOTE is a full stack JavaScript web application that allows users to create polls for other users to cast and collect votes. 
 
-Users must signup in order to both create polls and vote on them. Only one vote allowed per user.
+Users must signup in order to create polls, but anyone can vote on them. Only one vote allowed per user.
 
 Live URL: https://dvote.herokuapp.com/
 
