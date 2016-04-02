@@ -148,7 +148,8 @@ module.exports = function(app, passport) {
         if (req.user) {
             locals.user = req.user;
         } else {
-            locals.guest = req._remoteAddress;
+            // locals.guest = req._remoteAddress;
+            locals.guest = req.headers['x-forwarded-for']; // for heroku
         }
 
         // query the db for the poll requested then render
