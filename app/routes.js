@@ -147,6 +147,8 @@ module.exports = function(app, passport) {
         // add user info if present, otherwise add guest ip
         if (req.user) {
             locals.user = req.user;
+        } else {
+            locals.guest = req._remoteAddress;
         }
 
         // query the db for the poll requested then render
@@ -158,9 +160,16 @@ module.exports = function(app, passport) {
                 locals.poll = pollObj;
                 locals.chartData = dataFormat(pollObj);
 
-                // check if user already voted and set locals.voted to true/false
-                if ((locals.user) && (pollObj.voters)) {
-                    if (pollObj.voters.indexOf(locals.user.local.email) >= 0) {
+                // check if user is logged in or is a guest  
+                var checkUser = "";
+                if (req.user) {
+                    checkUser = locals.user.local.email;
+                } else {
+                    checkUser = locals.guest;
+                }
+                // check if user already voted and set locals.voted to true/false             
+                if ((checkUser) && (pollObj.voters)) {
+                    if (pollObj.voters.indexOf(checkUser) >= 0) {
                         locals.voted = true;
                     } else {
                         locals.voted = false;
