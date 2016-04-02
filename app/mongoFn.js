@@ -158,7 +158,7 @@ mongoFn.remove = function(removeQuery, callback){
         } else {
 
             var data = db.collection('data');
-            data.delete(removeQuery, function(err, result){
+            data.remove(removeQuery, function(err, result){
                 var returnObj = {};
                 if (err) {
                     returnObj = { 'response' : 'Error: Unable to remove document' };
@@ -183,7 +183,7 @@ mongoFn.removeMany = function(removeQuery, callback){
         } else {
 
             var data = db.collection('data');
-            data.delete(removeQuery, function(err, result){
+            data.remove(removeQuery, function(err, result){
                 var returnObj = {};
                 if (err) {
                     returnObj = { 'response' : 'Error: Unable to remove documents' };
