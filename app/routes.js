@@ -2,6 +2,12 @@
 var mongoFn    = require('./mongoFn'),
     dataFormat = require('./dataFormat'),
     requestIP = require('request');
+    
+// db reset dependency
+var seed = require('./seed');
+
+// env vars
+if (!process.env.SUSER) { require('./env'); }
 
 // local vars factory
 function getLocals(){
@@ -107,9 +113,8 @@ module.exports = function(app, passport) {
     // GET NEW POLL =============================
     app.get('/poll/new', isLoggedIn, function(req, res){
         // create locals
-       var locals = getLocals();
-       locals.user = req.user;
-        
+        var locals = getLocals();
+        locals.user = req.user;
         res.render('new_poll', locals);
     }); // end app.get('/poll/new')
     
@@ -161,11 +166,11 @@ module.exports = function(app, passport) {
                         locals.voted = false;
                     }
                 }
-                
                 res.render('poll', locals);
+                
             } else {
                 res.render('404', locals);   
-            } // end else
+            }
         }); // end query
     }); // end app.get('/poll/:id')
     
@@ -193,15 +198,15 @@ module.exports = function(app, passport) {
     }); // end app.post('/vote')
     
     // TEST POLLS ===============================
-    app.get('/testpoll', function(req, res){
-        // insert test poll objects
-        mongoFn.insert(pollObj1, function(result){
-            console.log(result);
-            mongoFn.insert(pollObj2, function(result){
-                console.log(result);
-                res.redirect('/');
-            }); // end insert 2
-        }); // end insert 1
+    app.get('/reset_polls', isLoggedIn, function(req, res){
+        // check if admin
+        if (req.user.local.email === process.env.SUSER) {
+            seed(function(){
+                res.redirect('/profile'); 
+            });
+        } else {
+            res.redirect('/');
+        }
     }); // end app.get('/testpoll')
     
     // NEXTID LOGGER ============================
@@ -227,12 +232,6 @@ function isLoggedIn(req, res, next){
     }
 }
 
-
-// voter validation =============================
-// check if user present in db doc's voters array
-// function voted(voters, voter) { 
-//     return voters.indexOf(voter) > -1 ? true : false;   
-// }
 
 // Create Poll Object
 // accepts a POST object and callback, updates mongodb, and returns object (success/error)
@@ -262,30 +261,3 @@ function createPollObject(postData, callback){
         
     }); // end getNextId
 }
-
-
-// test objects =================================
-var pollObj1 = { 
-    id: 1,
-    name: 'Apples!', 
-    author: 'JohnnyApplecore@gmail.com',
-    description: 'What is your favorite type of apple?', 
-    choices: [
-        {label:'Gala', value: 3},
-        {label:'Red Delicious', value: 2},
-        {label:'Granny Smith', value: 1}
-    ],
-    voters: ['username1','username2','ipaddress1']
-};
-var pollObj2 = {
-    id: 2,
-    name: 'Fries!',
-    author: 'SuzyQ@gmail.com',
-    description: 'How many fries can you eat in one sitting?',
-    choices: [
-        {label:'1 serving', value: 3},
-        {label:'2-5 servings', value: 1},
-        {label:'6+ servings', value: 1}
-    ],
-    voters: ['username1','username2','ipaddress2']
-};

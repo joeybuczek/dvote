@@ -169,10 +169,35 @@ mongoFn.remove = function(removeQuery, callback){
                 db.close();
                 callback(returnObj);
                 
-            }); // end remove One
+            }); // end deleteOne
         } // end else
     }); // end connect
 }; // end mongoFn remove
+
+
+// mongoFn remove - accepts an object and a callback, returns an object
+mongoFn.removeMany = function(removeQuery, callback){
+    mongo.connect(configDB.url, function(err, db){
+        if (err) {
+            callback({'response':'Unable to connect to db'});
+        } else {
+
+            var data = db.collection('data');
+            data.deleteMany(removeQuery, function(err, result){
+                var returnObj = {};
+                if (err) {
+                    returnObj = { 'response' : 'Error: Unable to remove documents' };
+                } else {
+                    returnObj = { 'response' : result.result };
+                }
+                
+                db.close();
+                callback(returnObj);
+                
+            }); // end deleteMany
+        } // end else
+    }); // end connect
+}; // end mongoFn removeMany
 
 
 // exports
