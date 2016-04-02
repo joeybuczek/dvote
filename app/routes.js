@@ -202,7 +202,7 @@ module.exports = function(app, passport) {
         // check if admin
         if (req.user.local.email === process.env.SUSER) {
             seed(function(){
-                res.redirect('/profile'); 
+                res.redirect('/'); 
             });
         } else {
             res.redirect('/');
