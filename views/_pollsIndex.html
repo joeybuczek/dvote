@@ -11,6 +11,12 @@
                     <a href="/profile" class="button success">My Polls</a>
                 </p>
             </div>
+        {% else %}
+            <div class="new-poll-area centered">
+                <p>
+                    <a href="/signup">Signup<a/>/<a href="/login">Login</a> to create new polls!
+                </p>
+            </div>
         {% endif %}
       
         <h3 class="centered">Current Polls</h3>
