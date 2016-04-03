@@ -97,6 +97,10 @@
     background-color: #500;
     color: red;
 }
+.my-polls-info {
+    margin: 0 0 30px;
+    text-align: center;
+}
 
 /* Chart Legends */
 #fork {
