@@ -12,11 +12,11 @@ Technologies/Modules used for this project include:
 
  - NodeJS
  
- - Passport (authentication)
+ - Passport for authentication
  
  - ExpressJS
  
- - Swig (templating)
+ - Swig for templating
  
  - MongoDB
  
